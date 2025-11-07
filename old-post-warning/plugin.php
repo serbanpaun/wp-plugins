@@ -2,11 +2,11 @@
 /*
 Plugin Name: Old Post Warning
 Plugin URI: http://www.ptm.ro/
-Version: 0.1 alpha
+Version: 0.2-20251107
 Author: Serban Paun
-Author URI: http://serbanpaun.ro/
-License: GPL2
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Author URI: http://serban.ro/
+License: GPL3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Description: This plugin will show a custom notice above every single post, whenever a post is older than 1 year.
 
 Old Post Warning is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Old Post Warning. If not, see https://www.gnu.org/licenses/gpl-2.0.html.
+along with Old Post Warning. If not, see https://www.gnu.org/licenses/gpl-3.0.html.
 */
 
 add_filter( 'the_content', 'oldpostwarning');
