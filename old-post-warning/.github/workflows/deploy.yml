@@ -21,8 +21,8 @@ jobs:
           SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
         run: |
-          echo "$SVN_PASSWORD" > svn-pass.txt
-          svn checkout --username $SVN_USERNAME --password $SVN_PASSWORD --non-interactive https://plugins.svn.wordpress.org/old-post-warning/ svn
+          # echo "$SVN_PASSWORD" > svn-pass.txt
+          svn checkout --username $SVN_USERNAME --password $SVN_PASSWORD --non-interactive --no-auth-cache https://plugins.svn.wordpress.org/old-post-warning/ svn
 
       - name: Copy files to trunk
         run: |
