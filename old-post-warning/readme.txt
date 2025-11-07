@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: zionptm
-Donate link: https://blog.serbanpaun.ro/about-me/
+Donate link: https://revolut.me/serban
 Tags: old post, notification, deprecated, warning
 Requires at least: 3.0.1
-Tested up to: 5.2
-Stable Tag: 5.2
+Tested up to: 6.8.3
+Stable Tag: 6.8.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,14 @@ Yes. You can customize the text appearance the same way you do it when posting a
 You can add any type of content Wordpress supports: text, images, videos, tables etc.
 
 == Changelog ==
+
+= 0.2-20251107 =
+- Version update
+- License update
+- Default warning message fix
+- Form structure fix
+- Days option retrieval fix
+- Commit message cleanup
 
 = 0.1 alpha =
 * First version of plugin. Any feedback is appreciated!
