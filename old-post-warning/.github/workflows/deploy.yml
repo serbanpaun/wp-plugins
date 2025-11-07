@@ -1,0 +1,47 @@
+name: Deploy old-post-warning to WordPress.org
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # triggers on tags like v1.0.0
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install SVN
+        run: sudo apt-get update && sudo apt-get install -y subversion rsync
+
+      - name: Setup SVN authentication
+        env:
+          SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
+        run: |
+          echo "$SVN_PASSWORD" > svn-pass.txt
+          svn checkout --username $SVN_USERNAME --password $SVN_PASSWORD --non-interactive https://plugins.svn.wordpress.org/old-post-warning/ svn
+
+      - name: Copy files to trunk
+        run: |
+          rsync -av --exclude='.git' --exclude='.github' ./ svn/trunk/
+          cd svn
+          svn add * --force || true
+
+      - name: Commit to trunk
+        env:
+          SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
+        run: |
+          cd svn
+          svn commit -m "Deploy version ${GITHUB_REF_NAME#v}" --username $SVN_USERNAME --password $SVN_PASSWORD --non-interactive
+
+      - name: Tag release in SVN
+        env:
+          SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
+        run: |
+          cd svn
+          svn copy trunk tags/${GITHUB_REF_NAME#v} -m "Tagging version ${GITHUB_REF_NAME#v}" --username $SVN_USERNAME --password $SVN_PASSWORD --non-interactive
