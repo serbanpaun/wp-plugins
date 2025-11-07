@@ -25,6 +25,21 @@ along with Old Post Warning. If not, see https://www.gnu.org/licenses/gpl-2.0.ht
 
 add_filter( 'the_content', 'oldpostwarning');
 
+
+register_activation_hook(__FILE__, function() {
+    // Set default value of 365 days if no value exists
+    if (get_option('opw_nodays') === false) {
+        update_option('opw_nodays', 365);
+    }
+    
+    $days = get_option('opw_nodays', 365);
+    $default_warning = "THIS POST IS OLDER THAN $days";
+    if (get_option('opw_warning') === false) {
+        update_option('opw_warning', $default_warning);
+    }
+});
+
+
 function oldpostwarning( $content ) {
 
     if ( is_single() )
@@ -33,26 +48,33 @@ function oldpostwarning( $content ) {
     $todayts = strtotime($today);
     $postdatets = strtotime($postdate);
     $diff = ($todayts - $postdatets)/60/60/24;
-    $days = 365;
+    $days = get_option('opw_nodays', 365);
+
+    // Make sure $days is a valid number between 1 and 366
+    if (empty($days) || !is_numeric($days) || intval($days) < 1 || intval($days) > 366) {
+        $days = 365;
+    } else {
+        $days = intval($days);
+    }
+
     if ( $diff > $days ) {
     $diff = '<div class="oldpostwarning1">'.get_option('opw_warning').'</div><br />';
     } else { $diff = NULL; }
     $content = $diff . $content;
-
     return $content;
 
 }
-
 
 add_action('admin_menu', 'opw_my_admin_menu');
 
 function opw_my_admin_menu() {
     add_menu_page('Old Post Warning - Plugin options', 'Old Post Warning', 'manage_options', 'opw-options','opw_plugin_options');
-    add_action( 'admin_init', 'opw_settings' ); //call register settings function
+    add_action( 'admin_init', 'opw_settings' );
  }
 
 function opw_settings() {
     register_setting( 'opw-group', 'opw_warning' );
+    register_setting( 'opw-group', 'opw_nodays' );
  }
 
 // RICH EDITOR
@@ -78,13 +100,42 @@ function opw_plugin_options() { ?>
 <h2>Old Post Warning - Plugin Options</h2>
     <form method="post" action="options.php">
         <?php settings_fields( 'opw-group' ); ?>
+        <h3>Text warning to show on old posts:</h3>
 	<div id="opwtext">
 	<?php
-	the_editor(get_option('opw_warning'), 'opw_warning',false,false); ?>
-        <p class="submit">
-        <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-        </p></div>
-    </form>
+	// the_editor(get_option('opw_warning'), 'opw_warning',false,false);
+    $days = get_option('opw_nodays', 365);
+
+    // Trim to remove whitespace and check if empty or not a valid number
+    if (empty($days) || !is_numeric($days) || intval($days) < 1 || intval($days) > 366) {
+        $days = 365;
+    } else {
+        $days = intval($days);
+    }
+    $default_warning = "THIS POST IS OLDER THAN $days";
+    if (get_option('opw_warning') === false) {
+        update_option('opw_warning', $default_warning);
+    }
+    wp_editor(
+        get_option('opw_warning', $default_warning),
+        'opw_warning',
+        array(
+            'media_buttons' => true,
+            'textarea_name' => 'opw_warning',
+            'textarea_rows' => 5,
+            'teeny' => true,
+            'quicktags' => false
+        )
+    );
+?>
+
+    <p class="submit">
+    <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+    </p></div>
+    <h3>Number of days after which a post is considered old:</h3>
+    <input type="number" min="1" max="365" name="opw_nodays" value="<?php echo $days; ?>" />
+    <p class="submit">
+</form>
 </div>
 
 <?php } ?>
