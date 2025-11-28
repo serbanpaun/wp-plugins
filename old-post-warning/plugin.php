@@ -38,7 +38,6 @@ register_activation_hook(__FILE__, function() {
     }
 });
 
-
 function oldpostwarning( $content ) {
 
     if ( is_single() )
@@ -136,5 +135,4 @@ function opw_plugin_options() { ?>
     <p class="submit">
 </form>
 </div>
-
 <?php } ?>
