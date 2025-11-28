@@ -11,24 +11,37 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Extract version from plugin file
+        id: get_version
+        run: |
+          VERSION=$(grep -i "Version:" old-post-warning.php | head -n1 | awk '{print $2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Install SVN
         run: sudo apt-get update && sudo apt-get install -y subversion rsync
 
-      - name: Setup SVN authentication
+      - name: Checkout SVN repo
         env:
           SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
         run: |
-          # echo "$SVN_PASSWORD" > svn-pass.txt
-          svn checkout --username $SVN_USERNAME --password $SVN_PASSWORD --non-interactive --no-auth-cache https://plugins.svn.wordpress.org/old-post-warning/ svn
+          svn checkout \
+            --username "$SVN_USERNAME" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive --no-auth-cache \
+            https://plugins.svn.wordpress.org/old-post-warning/ svn
 
-      - name: Copy files to trunk
+      - name: Sync files to trunk
         run: |
-          rsync -av --exclude='.git' --exclude='.github' ./ svn/trunk/
+          rsync -av --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            ./ svn/trunk/
+
           cd svn
-          svn add * --force || true
+          svn add --force trunk
 
       - name: Commit to trunk
         env:
@@ -36,12 +49,18 @@ jobs:
           SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
         run: |
           cd svn
-          svn commit -m "Deploy version ${GITHUB_REF_NAME#v}" --username $SVN_USERNAME --password $SVN_PASSWORD --non-interactive
+          svn commit -m "Deploy version ${{ steps.get_version.outputs.version }}" \
+            --username "$SVN_USERNAME" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive
 
-      - name: Tag release in SVN
+      - name: Tag release
         env:
           SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
         run: |
           cd svn
-          svn copy trunk tags/${GITHUB_REF_NAME#v} -m "Tagging version ${GITHUB_REF_NAME#v}" --username $SVN_USERNAME --password $SVN_PASSWORD --non-interactive
+          svn copy trunk tags/${{ steps.get_version.outputs.version }} -m "Tag version ${{ steps.get_version.outputs.version }}" \
+            --username "$SVN_USERNAME" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive
