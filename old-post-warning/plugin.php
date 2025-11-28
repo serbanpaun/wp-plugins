@@ -21,7 +21,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Old Post Warning. If not, see https://www.gnu.org/licenses/gpl-3.0.html.
-
 */
 
 add_filter( 'the_content', 'oldpostwarning');
