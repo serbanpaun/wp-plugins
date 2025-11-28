@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Old Post Warning ===
 Contributors: zionptm
 Donate link: https://revolut.me/serban
 Tags: old post, notification, deprecated, warning
