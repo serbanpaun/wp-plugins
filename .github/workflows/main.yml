@@ -1,0 +1,79 @@
+name: Deploy old-post-warning to WordPress.org
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1 Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2 Extract version from plugin header
+      - name: Get plugin version
+        id: get_version
+        run: |
+          VERSION=$(grep -i "Version:" old-post-warning.php | head -n1 | awk '{print $2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # 3 Install SVN
+      - name: Install SVN
+        run: sudo apt-get update && sudo apt-get install -y subversion rsync
+
+      # 4 Checkout SVN repo
+      - name: Checkout SVN
+        env:
+          SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
+        run: |
+          svn checkout \
+            --username "$SVN_USERNAME" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive \
+            --no-auth-cache \
+            https://plugins.svn.wordpress.org/old-post-warning/ svn
+
+      # 5 Sync files to trunk
+      - name: Sync files to trunk
+        run: |
+          rsync -av --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            ./ svn/trunk/
+          cd svn
+          svn add --force trunk || true
+
+      # 6 Commit to trunk
+      - name: Commit to trunk
+        env:
+          SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
+        run: |
+          cd svn
+          svn commit -m "Deploy version ${{ steps.get_version.outputs.version }}" \
+            --username "$SVN_USERNAME" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive || echo "No changes to commit"
+
+      # 7 Tag release
+      - name: Create SVN tag
+        env:
+          SVN_USERNAME: ${{ secrets.WP_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
+        run: |
+          cd svn
+          # Check if tag exists
+          if svn ls tags/${{ steps.get_version.outputs.version }}; then
+            echo "Tag already exists. Skipping."
+          else
+            svn copy trunk tags/${{ steps.get_version.outputs.version }} \
+              -m "Tagging version ${{ steps.get_version.outputs.version }}" \
+              --username "$SVN_USERNAME" \
+              --password "$SVN_PASSWORD" \
+              --non-interactive
+          fi
