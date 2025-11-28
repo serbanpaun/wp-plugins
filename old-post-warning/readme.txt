@@ -35,7 +35,7 @@ You can add any type of content Wordpress supports: text, images, videos, tables
 
 == Changelog ==
 
-= 0.2-20251228 =
+= 0.2-20251228-1 =
 Ready for 6.9 version.
 
 = 0.2-20251107 =
