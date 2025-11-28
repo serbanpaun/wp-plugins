@@ -20,7 +20,7 @@ jobs:
       - name: Get plugin version
         id: get_version
         run: |
-          VERSION=$(grep -i "Version:" old-post-warning.php | head -n1 | awk '{print $2}')
+          VERSION=$(grep -i "Version:" old-post-warning/plugin.php | head -n1 | awk '{print $2}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       # 3 Install SVN
@@ -43,10 +43,11 @@ jobs:
       # 5 Sync files to trunk
       - name: Sync files to trunk
         run: |
-          rsync -av --delete \
+          rm -rf svn/trunk/*
+          rsync -av \
             --exclude='.git' \
             --exclude='.github' \
-            ./ svn/trunk/
+            old-post-warning/ svn/trunk/
           cd svn
           svn add --force trunk || true
 
