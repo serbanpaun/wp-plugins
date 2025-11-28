@@ -70,12 +70,13 @@ jobs:
           SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
         run: |
           cd svn
-          # Check if tag exists
-          if svn ls tags/${{ steps.get_version.outputs.version }} > /dev/null 2>&1; then
+          VERSION=${{ steps.get_version.outputs.version }}
+          # If tag already exists, skip
+          if svn ls tags/$VERSION > /dev/null 2>&1; then
             echo "Tag already exists. Skipping."
           else
-            svn copy trunk tags/${{ steps.get_version.outputs.version }} \
-              -m "Tagging version ${{ steps.get_version.outputs.version }}" \
+            svn copy trunk tags/$VERSION
+            svn commit -m "Tagging version $VERSION" \
               --username "$SVN_USERNAME" \
               --password "$SVN_PASSWORD" \
               --non-interactive
