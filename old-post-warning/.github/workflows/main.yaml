@@ -13,6 +13,7 @@ jobs:
       # 1 Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
+        run: echo "Workflow ran successfully"
 
       # 2 Extract version from plugin header
       - name: Get plugin version
