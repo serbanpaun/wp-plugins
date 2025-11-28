@@ -48,3 +48,4 @@ Ready for 6.9
 
 = 0.1 alpha =
 * First version of plugin. Any feedback is appreciated!
+
