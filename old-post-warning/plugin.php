@@ -25,7 +25,6 @@ along with Old Post Warning. If not, see https://www.gnu.org/licenses/gpl-3.0.ht
 
 add_filter( 'the_content', 'oldpostwarning');
 
-
 register_activation_hook(__FILE__, function() {
     // Set default value of 365 days if no value exists
     if (get_option('opw_nodays') === false) {
