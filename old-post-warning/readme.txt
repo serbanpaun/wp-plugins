@@ -36,7 +36,7 @@ You can add any type of content Wordpress supports: text, images, videos, tables
 == Changelog ==
 
 = 0.2-20251228 =
-Ready for 6.9
+Ready for 6.9 version.
 
 = 0.2-20251107 =
 - Version update
@@ -48,4 +48,3 @@ Ready for 6.9
 
 = 0.1 alpha =
 * First version of plugin. Any feedback is appreciated!
-
