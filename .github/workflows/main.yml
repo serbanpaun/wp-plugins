@@ -20,7 +20,7 @@ jobs:
       - name: Get plugin version
         id: get_version
         run: |
-          VERSION=$(grep -i "Version:" old-post-warning/plugin.php | head -n1 | awk '{print $2}')
+          VERSION=$(grep -i "Version:" old-post-warning/plugin.php | head -n1 | awk '{print $2}' | tr -d '\r ')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       # 3 Install SVN
