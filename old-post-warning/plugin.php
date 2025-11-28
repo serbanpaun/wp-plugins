@@ -2,7 +2,7 @@
 /*
 Plugin Name: Old Post Warning
 Plugin URI: http://www.ptm.ro/
-Version: 0.2-20251107
+Version: 0.2-20251128
 Author: Serban Paun
 Author URI: http://serban.ro/
 License: GPL3
