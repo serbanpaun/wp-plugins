@@ -3,8 +3,8 @@ Contributors: zionptm
 Donate link: https://revolut.me/serban
 Tags: old post, notification, deprecated, warning
 Requires at least: 3.0.1
-Tested up to: 6.8.3
-Stable Tag: 0.2-20251107
+Tested up to: 6.9
+Stable Tag: 0.2-20251128
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,9 @@ Yes. You can customize the text appearance the same way you do it when posting a
 You can add any type of content Wordpress supports: text, images, videos, tables etc.
 
 == Changelog ==
+
+= 0.2-20251228 =
+Ready for 6.9
 
 = 0.2-20251107 =
 - Version update
