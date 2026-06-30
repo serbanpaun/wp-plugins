@@ -3,8 +3,8 @@ Contributors: zionptm
 Donate link: https://revolut.me/serban
 Tags: old post, notification, deprecated, warning
 Requires at least: 3.0.1
-Tested up to: 6.9
-Stable Tag: 0.2-20251128-1
+Tested up to: 7.0
+Stable Tag: 0.2-20260630
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
