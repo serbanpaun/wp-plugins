@@ -35,6 +35,9 @@ You can add any type of content Wordpress supports: text, images, videos, tables
 
 == Changelog ==
 
+= 0.2-20260825 =
+Plugin tested successfully on WP version 7.1.
+
 = 0.2-20260630 =
 Plugin tested successfully on WP version 7.0.
 
