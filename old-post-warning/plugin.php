@@ -2,7 +2,7 @@
 /*
 Plugin Name: Old Post Warning
 Plugin URI: http://www.ptm.ro/
-Version: 0.2-20260825
+Version: 0.2-20261125
 Author: Serban Paun
 Author URI: http://serban.ro/
 License: GPL3
@@ -98,7 +98,7 @@ function opw_plugin_options() { ?>
 <h2>Old Post Warning - Plugin Options</h2>
     <form method="post" action="options.php">
         <?php settings_fields( 'opw-group' ); ?>
-        <h3>Text warning to show on old posts:</h3>
+        <h3>Text warning shown on old posts:</h3>
 	<div id="opwtext">
 	<?php
 	// the_editor(get_option('opw_warning'), 'opw_warning',false,false);
@@ -130,7 +130,7 @@ function opw_plugin_options() { ?>
     <p class="submit">
     <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
     </p></div>
-    <h3>Number of days after which a post is considered old:</h3>
+    <h3>Number of passed days for a post to be considered old:</h3>
     <input type="number" min="1" max="365" name="opw_nodays" value="<?php echo $days; ?>" />
     <p class="submit">
 </form>
